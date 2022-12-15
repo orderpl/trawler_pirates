@@ -13,34 +13,36 @@ def degrees(x):
 def radians(x):
     return x * math.pi / 180
 
-def write(text, x, y, font=pygame.font.SysFont("Arial", 20), color=(255, 255, 255)):
-    screen.blit(font.render(str(text), 1, color), (x, y))
-    
-def intersect(A,B,C,D):
-    """Check if lines AB and CD intersect"""
-    def ccw(A,B,C):
-        return (C.y-A.y) * (B.x-A.x) > (B.y-A.y) * (C.x-A.x)
-    return ccw(A,C,D) != ccw(B,C,D) and ccw(A,B,C) != ccw(A,B,D)
-    
+def write(text, pos, font=pygame.font.SysFont("Agency FB", 50), color=(255, 255, 255)):
+    render = font.render(str(text), 1, color)
+    rect = render.get_rect()
+    rect.center = pos
+    screen.blit(render, rect)   
+
+class Rock(object):
+    def __init__(self, pos):
+        self.pos = pos
+        self.color = tuple([random.randint(150, 200) for i in range(3)])
+
 class WindArrow(object):
     def __init__(self):
         self.pos = Vector2(0, 0)
-        self.pos.x = res[0] - 250
-        self.pos.y = res[1] - 250
+        self.pos.x = res[0] - 300
+        self.pos.y = res[1] - 300
 
         self.angle = 0
 
         self.image = pygame.image.load("wind_arrow.png")
 
     def draw(self):
-        imgrot = pygame.transform.rotate(self.image, self.angle)
-        img = pygame.transform.scale(imgrot, Vector2(imgrot.get_rect().width, imgrot.get_rect().height) * 3)
+        img = pygame.transform.rotate(self.image, self.angle)
         imgrect = img.get_rect()
         imgrect.center = self.pos
         screen.blit(img, imgrect)
+        write("Wind direction", self.pos + Vector2(0, 250))
 
     def update(self):
-        self.angle = degrees((windAngle + radians(self.angle) * 4) / 5)
+        self.angle = degrees(windAngle)
 
 class Player(object):
     def __init__(self):
