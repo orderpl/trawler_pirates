@@ -15,7 +15,13 @@ def radians(x):
 
 def write(text, x, y, font=pygame.font.SysFont("Arial", 20), color=(255, 255, 255)):
     screen.blit(font.render(str(text), 1, color), (x, y))
-
+    
+def intersect(A,B,C,D):
+    """Check if lines AB and CD intersect"""
+    def ccw(A,B,C):
+        return (C.y-A.y) * (B.x-A.x) > (B.y-A.y) * (C.x-A.x)
+    return ccw(A,C,D) != ccw(B,C,D) and ccw(A,B,C) != ccw(A,B,D)
+    
 class WindArrow(object):
     def __init__(self):
         self.pos = Vector2(0, 0)
